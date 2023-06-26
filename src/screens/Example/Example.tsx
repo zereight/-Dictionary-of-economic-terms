@@ -1,20 +1,24 @@
+import { useNavigation } from '@react-navigation/native';
+import { StackNavigationProp } from '@react-navigation/stack';
+import { MainParamsList } from 'Dictionary-of-economic-terms/@types/navigation';
 import React, { useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import {
-  View,
   ActivityIndicator,
+  Alert,
+  Image,
+  ScrollView,
   Text,
   TouchableOpacity,
-  ScrollView,
-  Image,
-  Alert,
+  View,
 } from 'react-native';
 import { useDispatch } from 'react-redux';
-import { useTranslation } from 'react-i18next';
 import { Brand } from '../../components';
 import { useTheme } from '../../hooks';
 import { useLazyFetchOneQuery } from '../../services/modules/users';
-import { changeTheme, ThemeState } from '../../store/theme';
-import i18next from 'i18next';
+import { ThemeState, changeTheme } from '../../store/theme';
+
+type MyPageScreenNavigationProp = StackNavigationProp<MainParamsList, 'MyPage'>;
 
 const Example = () => {
   const { t } = useTranslation(['example', 'welcome']);
@@ -28,6 +32,8 @@ const Example = () => {
   } = useTheme();
   const dispatch = useDispatch();
 
+  const navigation = useNavigation<MyPageScreenNavigationProp>();
+
   const [fetchOne, { data, isSuccess, isLoading, isFetching }] =
     useLazyFetchOneQuery();
 
@@ -39,10 +45,6 @@ const Example = () => {
 
   const onChangeTheme = ({ theme, darkMode }: Partial<ThemeState>) => {
     dispatch(changeTheme({ theme, darkMode }));
-  };
-
-  const onChangeLanguage = (lang: 'fr' | 'en') => {
-    i18next.changeLanguage(lang);
   };
 
   return (
@@ -222,9 +224,9 @@ const Example = () => {
 
           <TouchableOpacity
             style={[Common.button.circle, Gutters.regularBMargin]}
-            onPress={() =>
-              onChangeLanguage(i18next.language === 'fr' ? 'en' : 'fr')
-            }
+            onPress={() => {
+              navigation.navigate('MyPage');
+            }}
           >
             <Image
               source={Images.icons.translate}

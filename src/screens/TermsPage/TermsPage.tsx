@@ -25,7 +25,7 @@ const economicTerms: EconomicTerm[] = [
   // Add more economic terms and definitions here
 ];
 
-const TermPage = () => {
+const TermsPage = () => {
   const renderTerm: ListRenderItem<EconomicTerm> = ({ item }) => (
     <View style={styles.termContainer}>
       <Text style={styles.term}>{item.term}</Text>
@@ -35,7 +35,7 @@ const TermPage = () => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Economic Terms</Text>
+      <Text style={styles.title}>{'전체 경제용어 90선'}</Text>
       <FlatList
         data={economicTerms}
         renderItem={renderTerm}
@@ -70,4 +70,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default TermPage;
+export default TermsPage;

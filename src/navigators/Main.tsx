@@ -1,14 +1,19 @@
 import React from 'react';
-import { Home } from '../screens';
+
 import {
   CardStyleInterpolators,
   createStackNavigator,
 } from '@react-navigation/stack';
+import Home from '../screens/Home/Home';
+import TermDetailPage from '../screens/TermDetailPage';
 import TermsPage from '../screens/TermsPage/TermsPage';
 
 export type MainStackParamList = {
   Home: undefined;
   TermsPage: undefined;
+  TermDetailPage: {
+    termId: number;
+  };
 };
 
 const Stack = createStackNavigator<MainStackParamList>();
@@ -39,6 +44,7 @@ const MainNavigator = () => {
     >
       <Stack.Screen name="Home" component={Home} />
       <Stack.Screen name="TermsPage" component={TermsPage} />
+      <Stack.Screen name="TermDetailPage" component={TermDetailPage} />
     </Stack.Navigator>
   );
 };

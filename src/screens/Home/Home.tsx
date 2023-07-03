@@ -69,7 +69,7 @@ const Home = () => {
             lineHeight: 16 * 1.3,
           }}
         >
-          {'부자 기초체력 키우러 가기'}
+          {'경제용어 외우러 가기'}
         </Text>
       </Pressable>
     </View>

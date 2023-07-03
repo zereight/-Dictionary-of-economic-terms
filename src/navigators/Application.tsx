@@ -1,15 +1,16 @@
-import React from 'react';
-import { SafeAreaView, StatusBar } from 'react-native';
-import { createStackNavigator } from '@react-navigation/stack';
+import { useFlipper } from '@react-navigation/devtools';
 import {
   NavigationContainer,
   useNavigationContainerRef,
 } from '@react-navigation/native';
-import { Startup } from '../screens';
-import { useTheme } from '../hooks';
-import MainNavigator from './Main';
-import { useFlipper } from '@react-navigation/devtools';
+import { createStackNavigator } from '@react-navigation/stack';
+import React from 'react';
+import { SafeAreaView, StatusBar } from 'react-native';
 import { ApplicationStackParamList } from '../../@types/navigation';
+import { useTheme } from '../hooks';
+
+import MainNavigator from './Main';
+import Startup from '../screens/Startup/Startup';
 
 const Stack = createStackNavigator<ApplicationStackParamList>();
 

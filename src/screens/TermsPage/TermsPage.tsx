@@ -30,10 +30,11 @@ const TermItem = ({
     <Pressable
       style={styles.termContainer}
       onPress={() => {
-        navigation.navigate('TermDetailPage', { term: title });
+        navigation.navigate('TermDetailPage', { term: title, description });
       }}
     >
       <Text style={styles.term}>{title}</Text>
+      <View style={{ height: 10 }} />
       <Text style={styles.description} numberOfLines={2}>
         {description}
       </Text>
@@ -54,7 +55,7 @@ const TermsPage = () => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>{'전체 경제용어 90선'}</Text>
+      <Text style={styles.title}>{'김승호 회장\n경제용어 90선'}</Text>
 
       <FlatList
         style={{
@@ -79,9 +80,10 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   title: {
-    fontSize: 24,
+    fontSize: 32,
     fontWeight: 'bold',
     marginBottom: 16,
+    textAlign: 'center',
   },
   termContainer: {
     marginBottom: 8,
@@ -90,11 +92,11 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   term: {
-    fontSize: 18,
+    fontSize: 24,
     fontWeight: 'bold',
   },
   description: {
-    fontSize: 14,
+    fontSize: 16,
     fontStyle: 'italic',
   },
 });

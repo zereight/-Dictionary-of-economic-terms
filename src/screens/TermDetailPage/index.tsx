@@ -6,11 +6,15 @@ import { Text, View } from 'react-native';
 const TermDetailPage = () => {
   const route = useRoute<RouteProp<MainStackParamList, 'TermDetailPage'>>();
 
-  const { termId } = route.params;
+  const { term } = route.params;
 
   return (
-    <View>
-      <Text>{termId}</Text>
+    <View
+      style={{
+        flex: 1,
+      }}
+    >
+      <Text>{term}</Text>
     </View>
   );
 };

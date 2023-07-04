@@ -12,7 +12,7 @@ export type MainStackParamList = {
   Home: undefined;
   TermsPage: undefined;
   TermDetailPage: {
-    termId: number;
+    term: string;
   };
 };
 

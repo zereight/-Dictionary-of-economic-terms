@@ -1,66 +1,70 @@
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
+import { firebaseDB } from '../../config/firebase';
+
 import { MainStackParamList } from 'Dictionary-of-economic-terms/src/navigators/Main';
-import React from 'react';
+import { onValue, ref } from 'firebase/database';
+import React, { useEffect, useState } from 'react';
 import { FlatList, Pressable, StyleSheet, Text, View } from 'react-native';
 
-type EconomicTerm = {
-  id: number;
-  term: string;
-  definition: string;
-};
+const starCountRef = ref(firebaseDB, 'live');
 
-const economicTerms: EconomicTerm[] = [
-  {
-    id: 1,
-    term: 'Inflation',
-    definition:
-      'A sustained increase in the general price level of goods and services in an economy over a period of time.',
-  },
-  {
-    id: 2,
-    term: 'GDP',
-    definition:
-      'Gross Domestic Product - the total value of goods produced and services provided in a country during one year.',
-  },
-  {
-    id: 3,
-    term: 'Supply and Demand',
-    definition:
-      'The theory explaining the interaction between the sellers (supply) and buyers (demand) of a particular resource or product.',
-  },
-  // Add more economic terms and definitions here
-];
+type EconomicTerm = {
+  title: string;
+  description: string;
+};
 
 type ScreenNavigationProp = StackNavigationProp<
   MainStackParamList,
   'TermsPage'
 >;
 
-const TermItem = ({ term }: { term: EconomicTerm }) => {
+const TermItem = ({
+  termInfo: { title, description },
+}: {
+  termInfo: EconomicTerm;
+}) => {
   const navigation = useNavigation<ScreenNavigationProp>();
 
   return (
     <Pressable
       style={styles.termContainer}
       onPress={() => {
-        navigation.navigate('TermDetailPage', { termId: term.id });
+        navigation.navigate('TermDetailPage', { term: title });
       }}
     >
-      <Text style={styles.term}>{term.term}</Text>
-      <Text style={styles.definition}>{term.definition}</Text>
+      <Text style={styles.term}>{title}</Text>
+      <Text style={styles.description} numberOfLines={2}>
+        {description}
+      </Text>
     </Pressable>
   );
 };
 
 const TermsPage = () => {
+  const [terms, setTerms] = useState<EconomicTerm[]>([]);
+
+  useEffect(() => {
+    onValue(starCountRef, snapshot => {
+      const data: EconomicTerm[] = snapshot.val().data;
+
+      setTerms(data);
+    });
+  }, []);
+
   return (
     <View style={styles.container}>
       <Text style={styles.title}>{'전체 경제용어 90선'}</Text>
+
       <FlatList
-        data={economicTerms}
-        renderItem={({ item }) => <TermItem term={item} />}
-        keyExtractor={item => item.term}
+        style={{
+          width: '100%',
+        }}
+        data={terms}
+        renderItem={({ item }) => {
+          return <TermItem termInfo={item} />;
+        }}
+        keyExtractor={item => item.title}
       />
     </View>
   );
@@ -72,6 +76,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     padding: 16,
+    width: '100%',
   },
   title: {
     fontSize: 24,
@@ -80,12 +85,15 @@ const styles = StyleSheet.create({
   },
   termContainer: {
     marginBottom: 8,
+    borderWidth: 1,
+    borderColor: 'red',
+    width: '100%',
   },
   term: {
     fontSize: 18,
     fontWeight: 'bold',
   },
-  definition: {
+  description: {
     fontSize: 14,
     fontStyle: 'italic',
   },

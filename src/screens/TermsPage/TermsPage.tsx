@@ -65,7 +65,7 @@ const TermsPage = () => {
       return;
     }
 
-    setTerms(data.data);
+    setTerms(Object.values(data.data));
   }, [data]);
 
   return (

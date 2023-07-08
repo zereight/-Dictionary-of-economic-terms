@@ -14,7 +14,7 @@ const TermDetailPage = () => {
   const navigation =
     useNavigation<NavigationProp<MainStackParamList, 'TermDetailPage'>>();
 
-  const { term, description } = route.params;
+  const { term, desc } = route.params;
 
   return (
     <View style={{ flex: 1 }}>
@@ -61,7 +61,7 @@ const TermDetailPage = () => {
             textAlign: 'justify',
           }}
         >
-          {description}
+          {desc}
         </Text>
       </View>
     </View>

@@ -14,7 +14,7 @@ import {
 
 type EconomicTerm = {
   title: string;
-  description: string;
+  desc: string;
 };
 
 type ScreenNavigationProp = StackNavigationProp<
@@ -23,7 +23,7 @@ type ScreenNavigationProp = StackNavigationProp<
 >;
 
 const TermItem = ({
-  termInfo: { title, description },
+  termInfo: { title, desc },
 }: {
   termInfo: EconomicTerm;
 }) => {
@@ -33,7 +33,7 @@ const TermItem = ({
     <TouchableOpacity
       style={styles.termContainer}
       onPress={() => {
-        navigation.navigate('TermDetailPage', { term: title, description });
+        navigation.navigate('TermDetailPage', { term: title, desc });
       }}
     >
       <View
@@ -43,8 +43,8 @@ const TermItem = ({
       >
         <Text style={styles.term}>{title}</Text>
         <View style={{ height: 10 }} />
-        <Text style={styles.description} numberOfLines={2}>
-          {description}
+        <Text style={styles.desc} numberOfLines={2}>
+          {desc}
         </Text>
       </View>
 
@@ -115,7 +115,7 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: 'bold',
   },
-  description: {
+  desc: {
     fontSize: 16,
     fontStyle: 'italic',
   },

@@ -5,7 +5,13 @@ import { firebaseDB } from '../../config/firebase';
 import { MainStackParamList } from 'Dictionary-of-economic-terms/src/navigators/Main';
 import { onValue, ref } from 'firebase/database';
 import React, { useEffect, useState } from 'react';
-import { FlatList, Pressable, StyleSheet, Text, View } from 'react-native';
+import {
+  FlatList,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 
 const starCountRef = ref(firebaseDB, 'live');
 
@@ -27,18 +33,28 @@ const TermItem = ({
   const navigation = useNavigation<ScreenNavigationProp>();
 
   return (
-    <Pressable
+    <TouchableOpacity
       style={styles.termContainer}
       onPress={() => {
         navigation.navigate('TermDetailPage', { term: title, description });
       }}
     >
-      <Text style={styles.term}>{title}</Text>
-      <View style={{ height: 10 }} />
-      <Text style={styles.description} numberOfLines={2}>
-        {description}
-      </Text>
-    </Pressable>
+      <View
+        style={{
+          flex: 1,
+        }}
+      >
+        <Text style={styles.term}>{title}</Text>
+        <View style={{ height: 10 }} />
+        <Text style={styles.description} numberOfLines={2}>
+          {description}
+        </Text>
+      </View>
+
+      <View>
+        <Text>{'>'}</Text>
+      </View>
+    </TouchableOpacity>
   );
 };
 
@@ -87,9 +103,14 @@ const styles = StyleSheet.create({
   },
   termContainer: {
     marginBottom: 8,
+    borderRadius: 10,
     borderWidth: 1,
-    borderColor: 'red',
+    borderColor: 'gray',
     width: '100%',
+    paddingVertical: 16,
+    paddingHorizontal: 24,
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   term: {
     fontSize: 24,

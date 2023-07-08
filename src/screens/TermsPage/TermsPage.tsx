@@ -1,4 +1,4 @@
-import { useNavigation } from '@react-navigation/native';
+import { NavigationProp, useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 
 import useFirebaseRealTimeDatabase from '@/hooks/useFirebaseRealTimeDatabase';
@@ -6,6 +6,7 @@ import { MainStackParamList } from '@/navigators/Main';
 import React, { useEffect, useState } from 'react';
 import {
   FlatList,
+  Image,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -58,6 +59,9 @@ const TermItem = ({
 const TermsPage = () => {
   const [terms, setTerms] = useState<EconomicTerm[]>([]);
 
+  const navigation =
+    useNavigation<NavigationProp<MainStackParamList, 'TermsPage'>>();
+
   const { data } = useFirebaseRealTimeDatabase('');
 
   useEffect(() => {
@@ -70,18 +74,42 @@ const TermsPage = () => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>{'김승호 회장\n경제용어 90선'}</Text>
-
-      <FlatList
+      <TouchableOpacity
+        onPress={() => navigation.goBack()}
         style={{
           width: '100%',
+          padding: 16,
         }}
-        data={terms}
-        renderItem={({ item }) => {
-          return <TermItem termInfo={item} />;
+      >
+        <Image
+          source={require('@/assets/img/back.png')}
+          style={{
+            tintColor: '#000',
+            width: 24,
+            height: 24,
+          }}
+        />
+      </TouchableOpacity>
+
+      <View
+        style={{
+          flex: 1,
+          width: '100%',
         }}
-        keyExtractor={item => item.title}
-      />
+      >
+        <Text style={styles.title}>{'김승호 회장\n경제용어 90선'}</Text>
+
+        <FlatList
+          style={{
+            width: '100%',
+          }}
+          data={terms}
+          renderItem={({ item }) => {
+            return <TermItem termInfo={item} />;
+          }}
+          keyExtractor={item => item.title}
+        />
+      </View>
     </View>
   );
 };

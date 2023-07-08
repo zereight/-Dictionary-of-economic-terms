@@ -4,7 +4,7 @@ import {
   useNavigation,
   useRoute,
 } from '@react-navigation/native';
-import { MainStackParamList } from 'Dictionary-of-economic-terms/src/navigators/Main';
+import { MainStackParamList } from '@/navigators/Main';
 import React from 'react';
 import { Image, Text, TouchableOpacity, View } from 'react-native';
 

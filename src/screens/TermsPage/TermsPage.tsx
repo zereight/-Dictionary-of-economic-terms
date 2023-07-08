@@ -1,9 +1,8 @@
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { firebaseDB } from '../../config/firebase';
 
-import { MainStackParamList } from 'Dictionary-of-economic-terms/src/navigators/Main';
-import { onValue, ref } from 'firebase/database';
+import useFirebaseRealTimeDatabase from '@/hooks/useFirebaseRealTimeDatabase';
+import { MainStackParamList } from '@/navigators/Main';
 import React, { useEffect, useState } from 'react';
 import {
   FlatList,
@@ -12,8 +11,6 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-
-const starCountRef = ref(firebaseDB, 'live');
 
 type EconomicTerm = {
   title: string;
@@ -61,13 +58,15 @@ const TermItem = ({
 const TermsPage = () => {
   const [terms, setTerms] = useState<EconomicTerm[]>([]);
 
-  useEffect(() => {
-    onValue(starCountRef, snapshot => {
-      const data: EconomicTerm[] = snapshot.val().data;
+  const { data } = useFirebaseRealTimeDatabase('');
 
-      setTerms(data);
-    });
-  }, []);
+  useEffect(() => {
+    if (!data) {
+      return;
+    }
+
+    setTerms(data.data);
+  }, [data]);
 
   return (
     <View style={styles.container}>

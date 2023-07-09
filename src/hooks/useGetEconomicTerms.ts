@@ -2,8 +2,10 @@ import { useGetExcelDataQuery } from '@/services/modules/econimicTerms';
 
 export type EconomicTerm = {
   title: string;
-  desc: string;
   exampleNews: string;
+  imagUrl: string;
+  previewDesc: string;
+  desc: string;
 };
 
 const useGetEconomicTerms = () => {
@@ -13,8 +15,10 @@ const useGetEconomicTerms = () => {
     data?.values.slice(1).map(item => {
       return {
         title: item[0],
-        desc: item[1],
-        exampleNews: item[2],
+        exampleNews: item[1],
+        imagUrl: item[2],
+        previewDesc: item[3],
+        desc: item[4],
       };
     }) || [];
 

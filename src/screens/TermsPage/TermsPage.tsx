@@ -55,7 +55,7 @@ const TermsPage = () => {
         <View style={{ height: 16 }} />
 
         {isFetching ? (
-          <ActivityIndicator size="large" color="blue" />
+          <ActivityIndicator size="large" color="gray" />
         ) : (
           <FlatList
             style={{

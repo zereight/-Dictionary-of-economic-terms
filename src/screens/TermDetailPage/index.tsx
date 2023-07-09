@@ -7,6 +7,7 @@ import {
 import { MainStackParamList } from '@/navigators/Main';
 import React from 'react';
 import { Image, ScrollView, Text, TouchableOpacity, View } from 'react-native';
+import BoldText from '@/components/BoldText';
 
 const TermDetailPage = () => {
   const route = useRoute<RouteProp<MainStackParamList, 'TermDetailPage'>>();
@@ -23,7 +24,7 @@ const TermDetailPage = () => {
         style={{
           width: '100%',
           paddingHorizontal: 48,
-          paddingTop: 16,
+          paddingVertical: 16,
         }}
       >
         <Image
@@ -36,24 +37,34 @@ const TermDetailPage = () => {
         />
       </TouchableOpacity>
 
-      <ScrollView
+      <View
         style={{
-          flex: 1,
           paddingHorizontal: 48,
-          paddingVertical: 36,
+          paddingVertical: 12,
         }}
       >
         <Text
           style={{
             fontSize: 32,
             fontWeight: 'bold',
+            textAlign: 'center',
           }}
         >
           {term}
         </Text>
+      </View>
+      <View style={{ height: 16 }} />
 
-        <View style={{ height: 16 }} />
-
+      <ScrollView
+        contentContainerStyle={{}}
+        contentInset={{ top: 0, bottom: 120 }}
+        style={{
+          flex: 1,
+          paddingHorizontal: 48,
+          paddingVertical: 36,
+          borderWidth: 1,
+        }}
+      >
         <Text
           style={{
             fontSize: 16,
@@ -61,7 +72,7 @@ const TermDetailPage = () => {
             textAlign: 'justify',
           }}
         >
-          {desc.replace(/\\n/g, '\n')}
+          <BoldText text={desc.replace(/\\n/g, '\n')} />
         </Text>
       </ScrollView>
     </View>

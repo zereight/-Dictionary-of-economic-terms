@@ -1,10 +1,11 @@
 import { NavigationProp, useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 
-import useFirebaseRealTimeDatabase from '@/hooks/useFirebaseRealTimeDatabase';
+import useGetEconomicTerms, { EconomicTerm } from '@/hooks/useGetEconomicTerms';
 import { MainStackParamList } from '@/navigators/Main';
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import {
+  ActivityIndicator,
   FlatList,
   Image,
   StyleSheet,
@@ -13,64 +14,16 @@ import {
   View,
 } from 'react-native';
 
-type EconomicTerm = {
-  title: string;
-  desc: string;
-};
-
 type ScreenNavigationProp = StackNavigationProp<
   MainStackParamList,
   'TermsPage'
 >;
 
-const TermItem = ({
-  termInfo: { title, desc },
-}: {
-  termInfo: EconomicTerm;
-}) => {
-  const navigation = useNavigation<ScreenNavigationProp>();
-
-  return (
-    <TouchableOpacity
-      style={styles.termContainer}
-      onPress={() => {
-        navigation.navigate('TermDetailPage', { term: title, desc });
-      }}
-    >
-      <View
-        style={{
-          flex: 1,
-        }}
-      >
-        <Text style={styles.term}>{title}</Text>
-        <View style={{ height: 10 }} />
-        <Text style={styles.desc} numberOfLines={2}>
-          {desc}
-        </Text>
-      </View>
-
-      <View>
-        <Text>{'>'}</Text>
-      </View>
-    </TouchableOpacity>
-  );
-};
-
 const TermsPage = () => {
-  const [terms, setTerms] = useState<EconomicTerm[]>([]);
-
   const navigation =
     useNavigation<NavigationProp<MainStackParamList, 'TermsPage'>>();
 
-  const { data } = useFirebaseRealTimeDatabase('');
-
-  useEffect(() => {
-    if (!data) {
-      return;
-    }
-
-    setTerms(Object.values(data.data));
-  }, [data]);
+  const { data, isFetching } = useGetEconomicTerms();
 
   return (
     <View style={styles.container}>
@@ -97,18 +50,27 @@ const TermsPage = () => {
           width: '100%',
         }}
       >
-        <Text style={styles.title}>{'김승호 회장\n경제용어 90선'}</Text>
+        <Text style={styles.title}>{'김승호 회장\n경제용어 96선'}</Text>
 
-        <FlatList
-          style={{
-            width: '100%',
-          }}
-          data={terms}
-          renderItem={({ item }) => {
-            return <TermItem termInfo={item} />;
-          }}
-          keyExtractor={item => item.title}
-        />
+        <View style={{ height: 16 }} />
+
+        {isFetching ? (
+          <ActivityIndicator size="large" color="blue" />
+        ) : (
+          <FlatList
+            style={{
+              width: '100%',
+            }}
+            data={data}
+            renderItem={({ item }) => {
+              return <TermItem termInfo={item} />;
+            }}
+            keyExtractor={item => item.title}
+            ItemSeparatorComponent={() => {
+              return <View style={{ height: 8 }} />;
+            }}
+          />
+        )}
       </View>
     </View>
   );
@@ -150,3 +112,43 @@ const styles = StyleSheet.create({
 });
 
 export default TermsPage;
+
+const TermItem = ({
+  termInfo: { title, desc },
+}: {
+  termInfo: EconomicTerm;
+}) => {
+  const navigation = useNavigation<ScreenNavigationProp>();
+
+  return (
+    <TouchableOpacity
+      style={styles.termContainer}
+      onPress={() => {
+        navigation.navigate('TermDetailPage', { term: title, desc });
+      }}
+    >
+      <View
+        style={{
+          flex: 1,
+        }}
+      >
+        <Text style={styles.term}>{title}</Text>
+        <View style={{ height: 10 }} />
+        <Text style={styles.desc} numberOfLines={2}>
+          {desc}
+        </Text>
+      </View>
+
+      <Image
+        source={require('@/assets/img/back.png')}
+        style={{
+          tintColor: '#000',
+          width: 16,
+          height: 16,
+          transform: [{ rotate: '180deg' }],
+          marginLeft: 8,
+        }}
+      />
+    </TouchableOpacity>
+  );
+};

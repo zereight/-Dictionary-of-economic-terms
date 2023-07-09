@@ -6,7 +6,7 @@ import {
 } from '@react-navigation/native';
 import { MainStackParamList } from '@/navigators/Main';
 import React from 'react';
-import { Image, Text, TouchableOpacity, View } from 'react-native';
+import { Image, ScrollView, Text, TouchableOpacity, View } from 'react-native';
 
 const TermDetailPage = () => {
   const route = useRoute<RouteProp<MainStackParamList, 'TermDetailPage'>>();
@@ -36,7 +36,7 @@ const TermDetailPage = () => {
         />
       </TouchableOpacity>
 
-      <View
+      <ScrollView
         style={{
           flex: 1,
           paddingHorizontal: 48,
@@ -61,9 +61,9 @@ const TermDetailPage = () => {
             textAlign: 'justify',
           }}
         >
-          {desc}
+          {desc.replace(/\\n/g, '\n')}
         </Text>
-      </View>
+      </ScrollView>
     </View>
   );
 };

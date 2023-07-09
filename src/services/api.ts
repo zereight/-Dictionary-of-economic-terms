@@ -18,6 +18,7 @@ const baseQueryWithInterceptor: BaseQueryFn<
   let result = await baseQuery(args, api, extraOptions);
   if (result.error && result.error.status === 401) {
   }
+
   return result;
 };
 

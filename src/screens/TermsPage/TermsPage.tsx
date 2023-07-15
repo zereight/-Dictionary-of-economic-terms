@@ -77,6 +77,11 @@ const TermsPage = () => {
           <ActivityIndicator size="large" color="gray" />
         ) : (
           <FlatList
+            getItemLayout={(data, index) => ({
+              length: 115, // 항목의 높이 또는 너비
+              offset: 115 * index, // 항목의 위치
+              index,
+            })}
             onLayout={onFlatListLayout}
             ref={flatListRef}
             style={{

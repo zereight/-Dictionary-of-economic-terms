@@ -91,7 +91,7 @@ const TermDetailPage = () => {
         contentInset={{ top: 0, bottom: 120 }}
         style={{
           flex: 1,
-          paddingHorizontal: 48,
+          paddingHorizontal: 32,
           paddingVertical: 36,
         }}
       >

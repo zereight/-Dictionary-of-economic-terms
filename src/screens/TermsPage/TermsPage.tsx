@@ -1,9 +1,10 @@
 import { NavigationProp, useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 
+import { storage } from '@/App';
 import useGetEconomicTerms, { EconomicTerm } from '@/hooks/useGetEconomicTerms';
 import { MainStackParamList } from '@/navigators/Main';
-import React from 'react';
+import React, { useRef } from 'react';
 import {
   ActivityIndicator,
   FlatList,
@@ -21,10 +22,27 @@ type ScreenNavigationProp = StackNavigationProp<
 >;
 
 const TermsPage = () => {
+  const flatListRef = useRef<FlatList>(null);
+
   const navigation =
     useNavigation<NavigationProp<MainStackParamList, 'TermsPage'>>();
 
   const { data, isFetching } = useGetEconomicTerms();
+
+  const onFlatListLayout = () => {
+    const _notYetViewedTermIndex = data.findIndex(term => {
+      return storage.getBoolean(term.title) !== true;
+    });
+
+    if (_notYetViewedTermIndex === -1) {
+      return;
+    }
+
+    flatListRef.current?.scrollToIndex({
+      index: _notYetViewedTermIndex,
+      animated: true,
+    });
+  };
 
   return (
     <View style={styles.container}>
@@ -59,6 +77,8 @@ const TermsPage = () => {
           <ActivityIndicator size="large" color="gray" />
         ) : (
           <FlatList
+            onLayout={onFlatListLayout}
+            ref={flatListRef}
             style={{
               width: '100%',
             }}

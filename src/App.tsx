@@ -1,10 +1,13 @@
-import 'react-native-gesture-handler';
 import React from 'react';
+import 'react-native-gesture-handler';
 import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/lib/integration/react';
-import { store, persistor } from './store';
 import ApplicationNavigator from './navigators/Application';
+import { persistor, store } from './store';
 import './translations';
+import { MMKV } from 'react-native-mmkv';
+
+export const storage = new MMKV();
 
 const App = () => (
   <Provider store={store}>

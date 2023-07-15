@@ -5,9 +5,18 @@ import {
   useRoute,
 } from '@react-navigation/native';
 import { MainStackParamList } from '@/navigators/Main';
-import React from 'react';
-import { Image, ScrollView, Text, TouchableOpacity, View } from 'react-native';
+import React, { useEffect } from 'react';
+import {
+  Alert,
+  Image,
+  ScrollView,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import BoldText from '@/components/BoldText';
+import useViewedTerms from '@/hooks/useViewedTerms';
+import { useMMKVBoolean } from 'react-native-mmkv';
 
 const TermDetailPage = () => {
   const route = useRoute<RouteProp<MainStackParamList, 'TermDetailPage'>>();
@@ -17,6 +26,14 @@ const TermDetailPage = () => {
 
   const { term, desc } = route.params;
 
+  const { addViewedTerm, removeViewedTerm } = useViewedTerms();
+
+  const [isViewed] = useMMKVBoolean(term);
+
+  useEffect(() => {
+    addViewedTerm(term);
+  }, []);
+
   return (
     <View style={{ flex: 1 }}>
       <TouchableOpacity
@@ -25,6 +42,9 @@ const TermDetailPage = () => {
           width: '100%',
           paddingHorizontal: 48,
           paddingVertical: 16,
+          flexDirection: 'row',
+          justifyContent: 'space-between',
+          alignItems: 'center',
         }}
       >
         <Image
@@ -35,6 +55,17 @@ const TermDetailPage = () => {
             height: 24,
           }}
         />
+
+        {isViewed && (
+          <TouchableOpacity
+            onPress={() => {
+              removeViewedTerm(term);
+              Alert.alert('읽음취소', '읽음취소되었습니다.');
+            }}
+          >
+            <Text>{'읽음취소'}</Text>
+          </TouchableOpacity>
+        )}
       </TouchableOpacity>
 
       <View
@@ -62,7 +93,6 @@ const TermDetailPage = () => {
           flex: 1,
           paddingHorizontal: 48,
           paddingVertical: 36,
-          borderWidth: 1,
         }}
       >
         <Text

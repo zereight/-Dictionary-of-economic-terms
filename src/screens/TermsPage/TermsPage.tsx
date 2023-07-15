@@ -13,6 +13,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
+import { useMMKVBoolean } from 'react-native-mmkv';
 
 type ScreenNavigationProp = StackNavigationProp<
   MainStackParamList,
@@ -120,9 +121,11 @@ const TermItem = ({
 }) => {
   const navigation = useNavigation<ScreenNavigationProp>();
 
+  const [isViewed] = useMMKVBoolean(title);
+
   return (
     <TouchableOpacity
-      style={styles.termContainer}
+      style={[styles.termContainer, { opacity: isViewed ? 0.5 : 1 }]}
       onPress={() => {
         navigation.navigate('TermDetailPage', { term: title, desc });
       }}
@@ -132,7 +135,16 @@ const TermItem = ({
           flex: 1,
         }}
       >
-        <Text style={styles.term}>{title}</Text>
+        <View
+          style={{
+            flexDirection: 'row',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+          }}
+        >
+          <Text style={styles.term}>{title}</Text>
+          {isViewed && <Text>{'읽음'}</Text>}
+        </View>
         <View style={{ height: 10 }} />
         <Text style={styles.desc} numberOfLines={2}>
           {desc}

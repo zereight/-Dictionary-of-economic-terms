@@ -1,3 +1,4 @@
+import Config from 'react-native-config';
 import { api } from '../../api';
 
 export type ExcelData = {
@@ -12,7 +13,7 @@ export const excelDataApi = api.injectEndpoints({
           return '';
         }
 
-        return `https://sheets.googleapis.com/v4/spreadsheets/1Oo8Lx0hZH3ZXhVHodAM6LAsearTdrfxNafryCOuowzs/values/시트1/?key=${process.env.GOOGLE_SHEET_API}`;
+        return `https://sheets.googleapis.com/v4/spreadsheets/1Oo8Lx0hZH3ZXhVHodAM6LAsearTdrfxNafryCOuowzs/values/시트1/?key=${Config.GOOGLE_SHEET_API}`;
       },
     }),
   }),

@@ -4,17 +4,19 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import { storage } from '@/App';
 import useGetEconomicTerms, { EconomicTerm } from '@/hooks/useGetEconomicTerms';
 import { MainStackParamList } from '@/navigators/Main';
-import React, { useRef } from 'react';
+import React, { memo, useRef, useState } from 'react';
 import {
   ActivityIndicator,
   FlatList,
   Image,
   StyleSheet,
   Text,
+  TextInput,
   TouchableOpacity,
   View,
 } from 'react-native';
 import { useMMKVBoolean } from 'react-native-mmkv';
+import useSearch from './useSearch';
 
 type ScreenNavigationProp = StackNavigationProp<
   MainStackParamList,
@@ -27,10 +29,20 @@ const TermsPage = () => {
   const navigation =
     useNavigation<NavigationProp<MainStackParamList, 'TermsPage'>>();
 
+  const [searchTerm, setSearchTerm] = useState('');
+
   const { data, isFetching } = useGetEconomicTerms();
+  const { filteredData } = useSearch({
+    originalData: data,
+    searchTerm,
+  });
 
   const onFlatListLayout = () => {
-    const _notYetViewedTermIndex = data.findIndex(term => {
+    if (filteredData.length === 0) {
+      return;
+    }
+
+    const _notYetViewedTermIndex = filteredData.findIndex(term => {
       return storage.getBoolean(term.title) !== true;
     });
 
@@ -73,10 +85,56 @@ const TermsPage = () => {
 
         <View style={{ height: 16 }} />
 
+        <View
+          style={{
+            position: 'relative',
+          }}
+        >
+          <TextInput
+            style={{
+              borderWidth: 1,
+              borderColor: 'gray',
+              borderRadius: 10,
+              padding: 12,
+            }}
+            placeholder="검색어를 입력하세요"
+            onChangeText={text => {
+              setSearchTerm(text);
+            }}
+            value={searchTerm}
+          />
+
+          {searchTerm !== '' && (
+            <TouchableOpacity
+              style={{
+                borderWidth: 1,
+                borderColor: 'gray',
+                borderRadius: 10,
+                padding: 6,
+                position: 'absolute',
+                right: 8,
+                top: '50%',
+                transform: [{ translateY: -14 }],
+              }}
+              onPress={() => {
+                setSearchTerm('');
+              }}
+            >
+              <Text>{'지우기'}</Text>
+            </TouchableOpacity>
+          )}
+        </View>
+
+        <View style={{ height: 16 }} />
+
         {isFetching ? (
           <ActivityIndicator size="large" color="gray" />
         ) : (
           <FlatList
+            removeClippedSubviews={true}
+            initialNumToRender={10}
+            maxToRenderPerBatch={10}
+            windowSize={10}
             getItemLayout={(data, index) => ({
               length: 115, // 항목의 높이 또는 너비
               offset: 115 * index, // 항목의 위치
@@ -87,7 +145,7 @@ const TermsPage = () => {
             style={{
               width: '100%',
             }}
-            data={data}
+            data={filteredData}
             renderItem={({ item }) => {
               return <TermItem termInfo={item} />;
             }}
@@ -139,53 +197,51 @@ const styles = StyleSheet.create({
 
 export default TermsPage;
 
-const TermItem = ({
-  termInfo: { title, desc },
-}: {
-  termInfo: EconomicTerm;
-}) => {
-  const navigation = useNavigation<ScreenNavigationProp>();
+const TermItem = memo(
+  ({ termInfo: { title, desc } }: { termInfo: EconomicTerm }) => {
+    const navigation = useNavigation<ScreenNavigationProp>();
 
-  const [isViewed] = useMMKVBoolean(title);
+    const [isViewed] = useMMKVBoolean(title);
 
-  return (
-    <TouchableOpacity
-      style={[styles.termContainer, { opacity: isViewed ? 0.5 : 1 }]}
-      onPress={() => {
-        navigation.navigate('TermDetailPage', { term: title, desc });
-      }}
-    >
-      <View
-        style={{
-          flex: 1,
+    return (
+      <TouchableOpacity
+        style={[styles.termContainer, { opacity: isViewed ? 0.5 : 1 }]}
+        onPress={() => {
+          navigation.navigate('TermDetailPage', { term: title, desc });
         }}
       >
         <View
           style={{
-            flexDirection: 'row',
-            alignItems: 'center',
-            justifyContent: 'space-between',
+            flex: 1,
           }}
         >
-          <Text style={styles.term}>{title}</Text>
-          {isViewed && <Text>{'읽음'}</Text>}
+          <View
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+            }}
+          >
+            <Text style={styles.term}>{title}</Text>
+            {isViewed && <Text>{'읽음'}</Text>}
+          </View>
+          <View style={{ height: 10 }} />
+          <Text style={styles.desc} numberOfLines={2}>
+            {desc}
+          </Text>
         </View>
-        <View style={{ height: 10 }} />
-        <Text style={styles.desc} numberOfLines={2}>
-          {desc}
-        </Text>
-      </View>
 
-      <Image
-        source={require('@/assets/img/back.png')}
-        style={{
-          tintColor: '#000',
-          width: 16,
-          height: 16,
-          transform: [{ rotate: '180deg' }],
-          marginLeft: 8,
-        }}
-      />
-    </TouchableOpacity>
-  );
-};
+        <Image
+          source={require('@/assets/img/back.png')}
+          style={{
+            tintColor: '#000',
+            width: 16,
+            height: 16,
+            transform: [{ rotate: '180deg' }],
+            marginLeft: 8,
+          }}
+        />
+      </TouchableOpacity>
+    );
+  },
+);

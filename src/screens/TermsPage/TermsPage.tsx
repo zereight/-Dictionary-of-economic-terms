@@ -103,26 +103,6 @@ const TermsPage = () => {
             }}
             value={searchTerm}
           />
-
-          {searchTerm !== '' && (
-            <TouchableOpacity
-              style={{
-                borderWidth: 1,
-                borderColor: 'gray',
-                borderRadius: 10,
-                padding: 6,
-                position: 'absolute',
-                right: 8,
-                top: '50%',
-                transform: [{ translateY: -14 }],
-              }}
-              onPress={() => {
-                setSearchTerm('');
-              }}
-            >
-              <Text>{'지우기'}</Text>
-            </TouchableOpacity>
-          )}
         </View>
 
         <View style={{ height: 16 }} />
@@ -173,6 +153,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginBottom: 16,
     textAlign: 'center',
+    height: 100,
   },
   termContainer: {
     marginBottom: 8,
